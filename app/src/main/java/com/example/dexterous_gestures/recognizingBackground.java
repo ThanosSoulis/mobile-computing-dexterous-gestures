@@ -27,10 +27,10 @@ public class recognizingBackground extends Thread{
 
     boolean continuousLog = false;
     Handler uiHandler;
-    private static final String MSG_KEY = "result";
+    public static final String MSG_KEY = "result";
     private static final String LOG_KEY = "log";
-    private static final String SCORE_KEY = "score";
-    private static final String SPEED_KEY = "speed";
+    public static final String SCORE_KEY = "score";
+    public static final String SPEED_KEY = "speed";
 
     protected long frameRatePeriod = 1000000000L / 50L;
     private final AtomicBoolean running = new AtomicBoolean(false);
@@ -388,27 +388,27 @@ public class recognizingBackground extends Thread{
             if (accumulateX > fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Adduction/ Full
                 recogGestureResult = 14;
-                Log.d(TAG,"Flip/ Adduction/ Full: "+recogGestureResult);
+//                Log.d(TAG,"Flip/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateX < -fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Abduction/ Full
                 recogGestureResult = 12;
-                Log.d(TAG,"Flip/ Abduction/ Full: "+recogGestureResult);
+//                Log.d(TAG,"Flip/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateY > fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Adduction/ Full
                 recogGestureResult = 10;
-                Log.d(TAG,"Rotate/ Adduction/ Full: "+recogGestureResult);
+//                Log.d(TAG,"Rotate/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateY < -fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Abduction/ Full
                 recogGestureResult = 8;
-                Log.d(TAG,"Rotate/ Abduction/ Full: "+recogGestureResult);
+//                Log.d(TAG,"Rotate/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateZ > fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Adduction/ Full
                 recogGestureResult = 6;
-                Log.d(TAG,"Spin/ Adduction/ Full: "+recogGestureResult);
+//                Log.d(TAG,"Spin/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 2;
             } else if (accumulateZ < -fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Abduction/ Full

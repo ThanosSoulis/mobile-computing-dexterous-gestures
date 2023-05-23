@@ -407,12 +407,16 @@ public class recognizingBackground extends Thread{
                 main_axis = 1;
             } else if (accumulateZ > fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Adduction/ Full
+                MainActivity.myRef.setValue("SPINNNNN!");
+
                 recogGestureResult = 6;
 //                Log.d(TAG,"Spin/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 2;
             } else if (accumulateZ < -fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Abduction/ Full
                 recogGestureResult = 4;
+                MainActivity.myRef.setValue("SPINNNNN!");
+
                 main_axis = 2;
             }
 

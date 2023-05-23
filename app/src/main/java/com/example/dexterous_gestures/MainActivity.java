@@ -14,12 +14,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "MainActivity";
     public static final long GESTURE_GAP_TIME = 500;
 
     private recognizingBackground sensor;
     private static long prevTime = 0;
+
+    public static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("actions");
 
     @SuppressLint("HandlerLeak")
     private static Handler resultHandler = new Handler() {
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        
+
         if (id == R.id.accept_button)
             onDecline();
         else if (id == R.id.decline_button)

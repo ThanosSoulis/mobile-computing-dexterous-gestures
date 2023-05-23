@@ -15,6 +15,7 @@ import org.apache.commons.math3.complex.Quaternion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -366,21 +367,27 @@ public class recognizingBackground extends Thread{
                     if (accumulateX > halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Flip/ Adduction/ semi
                         recogGestureResult = 13;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Flip Half");
                     } else if (accumulateX < -halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Flip/ Abduction/ semi
                         recogGestureResult = 11;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Flip Half");
                     } else if (accumulateY > halfThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Rotate/ Adduction/ semi
                         recogGestureResult = 9;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Rotate Half");
                     } else if (accumulateY < -halfThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Rotate/ Abduction/ semi
                         recogGestureResult = 7;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Rotate Half");
                     } else if (accumulateZ > halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                         // Rotate/ Adduction/ semi
                         recogGestureResult = 5;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Spin Half");
                     } else if (accumulateZ < -halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                         // Rotate/ Abduction/ semi
                         recogGestureResult = 3;
+                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Spin Half");
                     }
                 }
             }
@@ -388,31 +395,50 @@ public class recognizingBackground extends Thread{
             if (accumulateX > fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Adduction/ Full
                 recogGestureResult = 14;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
 //                Log.d(TAG,"Flip/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateX < -fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Abduction/ Full
                 recogGestureResult = 12;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
+
 //                Log.d(TAG,"Flip/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateY > fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Adduction/ Full
                 recogGestureResult = 10;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
 //                Log.d(TAG,"Rotate/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateY < -fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Abduction/ Full
                 recogGestureResult = 8;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
 //                Log.d(TAG,"Rotate/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateZ > fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Adduction/ Full
                 recogGestureResult = 6;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
 //                Log.d(TAG,"Spin/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 2;
             } else if (accumulateZ < -fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Abduction/ Full
                 recogGestureResult = 4;
+                if(!MainActivity.userStudyModel.userId.isEmpty()){
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
+                }
                 main_axis = 2;
             }
 
@@ -426,6 +452,7 @@ public class recognizingBackground extends Thread{
                 if (recogGestureResult != 0 && breakTime == 10) {
                     // detect break during the gesture, no need to finish calculate
                     //Log.d(TAG, "break");
+                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Not Finished Break");
                     break;
                 }
             }

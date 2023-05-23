@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "493775667651",
+    "firebase_url": "https://mobilecomputing-7b934-default-rtdb.firebaseio.com",
+    "project_id": "mobilecomputing-7b934",
+    "storage_bucket": "mobilecomputing-7b934.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493775667651:android:744970545ed1c06ed7fd76",
+        "android_client_info": {
+          "package_name": "com.example.dexterous_gestures"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493775667651-vr3n5q3eqfi52j4d8tkk332eiehuff9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUcf_rb6xvvfbpmc6LHWYxWgun2157ViI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493775667651-vr3n5q3eqfi52j4d8tkk332eiehuff9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

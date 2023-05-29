@@ -83,8 +83,9 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         float reactionTime = stopResponseTimeTracker();
         // TODO Log the successful gesture here
 
-        startActivity(new Intent(PhoneCallActivity.this, IdleActivity.class));
-//        finish();
+        startIdleActivity();
+
+        finish();
     }
 
     private void onAccept() {
@@ -94,10 +95,26 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         float reactionTime = stopResponseTimeTracker();
         // TODO Log the successful gesture here
 
-        startActivity(new Intent(PhoneCallActivity.this, IdleActivity.class));
-//        finish();
+        startIdleActivity();
+
+        finish();
     }
 
+    private void startIdleActivity(){
+        Bundle bundle = getIntent().getExtras();
+
+        int repetitions = bundle.getInt(MainActivity.Repetitions);
+
+        if(repetitions > 0) {
+            Intent intent = new Intent(PhoneCallActivity.this, IdleActivity.class);
+            intent.putExtras(bundle);
+
+            startActivityForResult(intent, 1);
+        }
+        // When the repetitions are over, start the Main Activity again
+        else
+            startActivity(new Intent(PhoneCallActivity.this, MainActivity.class));
+    }
     private void startResponseTimeTracker(){
         startResponseTime = System.currentTimeMillis();
     }
@@ -112,14 +129,7 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_call);
 
-        // Hide navigation bar
-        WindowInsetsControllerCompat windowInsetsController =
-                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-        // Configure the behavior of the hidden system bars.
-        assert windowInsetsController != null;
-        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        //Hide the system bars
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        handleSystemBars(true);
 
         if( MainActivity.userStudyModel.gesture.compareTo("Touch") != 0)
         {
@@ -128,16 +138,33 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
             sensor.start();
         }
 
+        setupButtons();
+
+        // Starting the ringtone
+        mediaPlayer = MediaPlayer.create(this, R.raw.incoming_call);
+        mediaPlayer.setLooping(true);
+    }
+
+    private void setupButtons(){
         // Set button actions
         ImageButton bt_decline = findViewById(R.id.decline_button);
         bt_decline.setOnClickListener(this);
 
         ImageButton bt_accept = findViewById(R.id.accept_button);
         bt_accept.setOnClickListener(this);
+    }
+    private void handleSystemBars(Boolean hide){
 
-        // Starting the ringtone
-        mediaPlayer = MediaPlayer.create(this, R.raw.incoming_call);
-        mediaPlayer.setLooping(true);
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        // Configure the behavior of the hidden system bars.
+        assert windowInsetsController != null;
+        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        //Hide the system bars
+        if (hide)
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        else
+            windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
     }
 
     @Override
@@ -172,15 +199,7 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
             e.printStackTrace();
         } finally {
 
-            // Get navigation bar
-            WindowInsetsControllerCompat windowInsetsController =
-                    WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-            // Configure the behavior of the hidden system bars.
-            if(windowInsetsController != null) {
-                windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-                //Show the system bars
-                windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
-            }
+            handleSystemBars(false);
 
             if (mediaPlayer != null) {
                 mediaPlayer.release();

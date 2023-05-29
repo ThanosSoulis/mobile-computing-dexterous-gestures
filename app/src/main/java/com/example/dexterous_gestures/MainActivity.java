@@ -16,6 +16,10 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "MainActivity";
+    public static final String StartTime = "StartTime";
+    public static final String TimeInterval = "TimeInterval";
+    public static final String RegularStartTime = "RegularStartTime";
+    public static final String Repetitions = "Repetitions";
     public static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("actions");
     public static UserStudyModel userStudyModel = new UserStudyModel();
 
@@ -26,6 +30,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        populateGestureToCodeMap();
+        setupButtons();
+    }
+
+    private void populateGestureToCodeMap(){
         gestureToCodeMap.put(14,"FlipFull");
         gestureToCodeMap.put(13,"FlipHalf");
         gestureToCodeMap.put(12, "FlipFull");
@@ -39,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gestureToCodeMap.put(4, "SpinFull");
         gestureToCodeMap.put(3, "SpinHalf");
         gestureToCodeMap.put(-1, "Touch");
-
+    }
+    private void setupButtons(){
         Button bt_phone_call = (Button) findViewById(R.id.call_button);
         bt_phone_call.setOnClickListener(this);
 
@@ -54,7 +64,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.settings)
             showDialog();
         else if (id == R.id.call_button) {
-            startActivity(new Intent(MainActivity.this, PhoneCallActivity.class));
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(StartTime,10);
+            bundle.putInt(RegularStartTime, 5);
+            bundle.putInt(TimeInterval, 2);
+            bundle.putInt(Repetitions, 3);
+
+            Intent intent = new Intent(MainActivity.this, IdleActivity.class);
+            intent.putExtras(bundle);
+
+            startActivityForResult(intent,0);
             finish();
         }
     }

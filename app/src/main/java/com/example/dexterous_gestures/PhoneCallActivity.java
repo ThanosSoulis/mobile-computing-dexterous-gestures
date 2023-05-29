@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -63,10 +66,15 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         int id = view.getId();
         
-        if (id == R.id.decline_button)
+        if (id == R.id.decline_button){
             onDecline();
-        else if (id == R.id.accept_button)
+            //TODO Log button press here
+        }
+        else if (id == R.id.accept_button){
             onAccept();
+            //TODO Log button press here
+        }
+
     }
     private void onDecline() {
         Log.d(TAG, "onDecline: Called !");
@@ -76,7 +84,7 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         // TODO Log the successful gesture here
 
         startActivity(new Intent(PhoneCallActivity.this, IdleActivity.class));
-        finish();
+//        finish();
     }
 
     private void onAccept() {
@@ -87,7 +95,7 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         // TODO Log the successful gesture here
 
         startActivity(new Intent(PhoneCallActivity.this, IdleActivity.class));
-        finish();
+//        finish();
     }
 
     private void startResponseTimeTracker(){
@@ -103,6 +111,15 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_call);
+
+        // Hide navigation bar
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        // Configure the behavior of the hidden system bars.
+        assert windowInsetsController != null;
+        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        //Hide the system bars
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
 
         if( MainActivity.userStudyModel.gesture.compareTo("Touch") != 0)
         {
@@ -144,13 +161,27 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
     protected void onDestroy() {
         super.onDestroy();
 
-        sensor.stopThread();
         try {
-            sensor.join();
-            Log.d(TAG, "Sensor join");
+            if(sensor != null)
+            {
+                sensor.stopThread();
+                sensor.join();
+                Log.d(TAG, "Sensor join");
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
+
+            // Get navigation bar
+            WindowInsetsControllerCompat windowInsetsController =
+                    WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+            // Configure the behavior of the hidden system bars.
+            if(windowInsetsController != null) {
+                windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                //Show the system bars
+                windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
+            }
+
             if (mediaPlayer != null) {
                 mediaPlayer.release();
                 mediaPlayer = null;

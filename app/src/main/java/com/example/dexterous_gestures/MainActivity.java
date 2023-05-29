@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putInt(StartTime,10);
             bundle.putInt(RegularStartTime, 5);
             bundle.putInt(TimeInterval, 2);
-            bundle.putInt(Repetitions, 3);
+            bundle.putInt(Repetitions, 4);
 
             Intent intent = new Intent(MainActivity.this, IdleActivity.class);
             intent.putExtras(bundle);

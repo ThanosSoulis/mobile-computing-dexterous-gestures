@@ -25,6 +25,12 @@ public class IdleActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        // Commenting out the super disables the back functionality
+        //super.onBackPressed();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 

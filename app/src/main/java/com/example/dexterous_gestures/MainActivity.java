@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TimeInterval = "TimeInterval";
     public static final String RegularStartTime = "RegularStartTime";
     public static final String Repetitions = "Repetitions";
-    public static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("actions");
+    public static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     public static UserStudyModel userStudyModel = new UserStudyModel();
 
     public static HashMap<Integer, String> gestureToCodeMap = new HashMap<>();
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.settings)
             showDialog();
-        else if (id == R.id.call_button) {
+        else if (id == R.id.call_button && (userStudyModel.getUserId() != null)) {
 
             Bundle bundle = new Bundle();
             bundle.putInt(StartTime,10);

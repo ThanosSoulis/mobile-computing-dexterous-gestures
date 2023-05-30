@@ -19,9 +19,6 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Objects;
 
 public class PhoneCallActivity extends AppCompatActivity implements View.OnClickListener{
@@ -30,7 +27,8 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
     private recognizingBackground sensor;
     private static long prevTime = 0;
     private MediaPlayer mediaPlayer = null;
-    private float startResponseTime = 0;
+    private long startResponseTime = 0;
+    private long stopResponseTime= 0;
     @SuppressLint("HandlerLeak")
     private Handler resultHandler = new Handler() {
         @Override
@@ -51,12 +49,14 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
                     Log.d(TAG, string + (time - prevTime));
                     prevTime = time;
 
-                    //TODO Log the actual gesture here
+                    MainActivity.userStudyModel.setActualGesture(MainActivity.gestureToCodeMap.get(gestureCode));
 
-                    if(Objects.equals(MainActivity.gestureToCodeMap.get(gestureCode), MainActivity.userStudyModel.gesture)) {
+                    if(Objects.equals(MainActivity.gestureToCodeMap.get(gestureCode), MainActivity.userStudyModel.expectedGesture)) {
                         // TODO do we ever need to call onAccept ?
                         onDecline();
 
+                    } else {
+                        uploadToFirebase(null);
                     }
                 }
             }
@@ -67,8 +67,8 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         int id = view.getId();
         
         if (id == R.id.decline_button){
+            MainActivity.userStudyModel.setActualGesture(MainActivity.gestureToCodeMap.get(-1));
             onDecline();
-            //TODO Log button press here
         }
         else if (id == R.id.accept_button){
             onAccept();
@@ -80,19 +80,26 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
         Log.d(TAG, "onDecline: Called !");
         mediaPlayer.stop();
 
-        float reactionTime = stopResponseTimeTracker();
+        long reactionTime = stopResponseTimeTracker();
         // TODO Log the successful gesture here
-
+        uploadToFirebase(reactionTime);
         startIdleActivity();
 
         finish();
+    }
+
+    private void uploadToFirebase(Long reactionTime){
+        MainActivity.userStudyModel.setResponseTime(String.valueOf(reactionTime));
+        MainActivity.userStudyModel.setTimeStampAlarmStart(String.valueOf(startResponseTime));
+        MainActivity.userStudyModel.setTimeStampAlarmSop(String.valueOf(stopResponseTime));
+        MainActivity.myRef.child(MainActivity.userStudyModel.userId).child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
     }
 
     private void onAccept() {
         Log.d(TAG, "onAccept: Called !");
         mediaPlayer.stop();
 
-        float reactionTime = stopResponseTimeTracker();
+        long reactionTime = stopResponseTimeTracker();
         // TODO Log the successful gesture here
 
         startIdleActivity();
@@ -120,8 +127,9 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
     }
 
     // Return the response time in milliseconds
-    private float stopResponseTimeTracker(){
-        return System.currentTimeMillis() - startResponseTime;
+    private long stopResponseTimeTracker(){
+        stopResponseTime = System.currentTimeMillis();
+        return  stopResponseTime - startResponseTime;
     }
 
     @Override
@@ -131,7 +139,7 @@ public class PhoneCallActivity extends AppCompatActivity implements View.OnClick
 
         handleSystemBars(true);
 
-        if( MainActivity.userStudyModel.gesture.compareTo("Touch") != 0)
+        if( MainActivity.userStudyModel.expectedGesture.compareTo("Touch") != 0)
         {
             //This starts the recognizingBackground thread
             sensor = new recognizingBackground(getApplicationContext(), resultHandler, true);

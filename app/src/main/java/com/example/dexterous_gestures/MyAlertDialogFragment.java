@@ -9,11 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class MyAlertDialogFragment extends DialogFragment {
+    private String selectedContext;
+    private String selectedGesture;
 
     public static MyAlertDialogFragment newInstance(int title) {
         MyAlertDialogFragment frag = new MyAlertDialogFragment();
@@ -31,12 +40,45 @@ public class MyAlertDialogFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog, null, false);
 
         EditText inputUser = view.findViewById(R.id.userId);
-        EditText inputContext = view.findViewById(R.id.contextId);
-        EditText inputGesture = view.findViewById(R.id.gesture);
+        RadioGroup radioGroupGesture = view.findViewById(R.id.radioGroupGesture);
+        RadioGroup radioGroupContext = view.findViewById(R.id.radioGroupContext);
+        Set<String> uniqueOptions = new HashSet<>(MainActivity.gestureToCodeMap.values());
+
+        for (String option : uniqueOptions) {
+            RadioButton radioButton = new RadioButton(view.getContext());
+            radioButton.setText(option);
+            radioGroupGesture.addView(radioButton);
+        }
+
+        List<String> stringList = Arrays.asList("Sit", "Walk", "Distracted (Typing)");
+
+        for (String option : stringList) {
+            RadioButton radioButton = new RadioButton(view.getContext());
+            radioButton.setText(option);
+            radioGroupContext.addView(radioButton);
+        }
+
+        radioGroupGesture.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Handle radio button selection changes here
+                RadioButton radioButton = view.findViewById(checkedId);
+                selectedGesture = radioButton.getText().toString();
+            }
+        });
+
+        radioGroupContext.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Handle radio button selection changes here
+                RadioButton radioButton = view.findViewById(checkedId);
+                selectedContext = radioButton.getText().toString();
+
+            }
+        });
 
         if(MainActivity.userStudyModel.userId != null){
             inputUser.setText(MainActivity.userStudyModel.userId);
-            inputContext.setText(MainActivity.userStudyModel.contextId);
         }
 
         // Inflate and set the layout for the dialog
@@ -47,14 +89,13 @@ public class MyAlertDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         String userId = inputUser.getText().toString();
-                        String contextId = inputContext.getText().toString();
-                        String gesture = inputGesture.getText().toString();
                         if(
-                             !userId.isEmpty() || !contextId.isEmpty() || !gesture.isEmpty()
+                             !userId.isEmpty() && selectedContext != null && selectedGesture != null
                         ){
                         MainActivity.userStudyModel.setUserId(userId);
-                        MainActivity.userStudyModel.setContextId(contextId);
-                        MainActivity.userStudyModel.setGesture(gesture);
+                            MainActivity.userStudyModel.setContextId(selectedContext);
+                            MainActivity.userStudyModel.setExpectedGesture(selectedGesture);
+
                         } else Toast.makeText(getActivity(),"Input can't be empty!", Toast.LENGTH_LONG).show();
                     }
                 })

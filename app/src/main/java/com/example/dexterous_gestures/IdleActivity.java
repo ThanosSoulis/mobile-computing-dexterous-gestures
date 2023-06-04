@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class IdleActivity extends AppCompatActivity {
     private static final String TAG = "IdleActivity";
@@ -62,8 +63,8 @@ public class IdleActivity extends AppCompatActivity {
         public void run() {
             Bundle bundle = new Bundle();
             bundle.putInt(MainActivity.StartTime, startTime);
-            bundle.putInt(MainActivity.RegularStartTime, timeInterval);
-            bundle.putInt(MainActivity.TimeInterval, regularStartTime);
+            bundle.putInt(MainActivity.RegularStartTime, regularStartTime);
+            bundle.putInt(MainActivity.TimeInterval, timeInterval);
             //Decrease the number of repetitions when starting a PhoneCall
             bundle.putInt(MainActivity.Repetitions, repetitions - 1);
 
@@ -78,7 +79,7 @@ public class IdleActivity extends AppCompatActivity {
 
     private void startPhoneCallTimer(){
 
-        long randomInterval = (long) (Math.random() * timeInterval * 1000L);
+        long randomInterval = ThreadLocalRandom.current().nextLong(timeInterval * 1000L);
         boolean fromMain = getCallingActivity().getClassName().equals(MainActivity.class.getName());
 
         long interval;
@@ -88,9 +89,9 @@ public class IdleActivity extends AppCompatActivity {
             interval = randomInterval + regularStartTime * 1000L;
 
         mHandler.postDelayed(mUpdateTimeTask, interval);
-
+        
         //TODO Log interval in seconds
-        Log.d(TAG, "Start Interval: "+ (float)(interval/1000f));
+        Log.d(TAG, "Start Interval: "+ (interval/1000f) + " | Random Interval: "+ (randomInterval/1000f));
     }
 
 

@@ -99,6 +99,7 @@ public class recognizingBackground extends Thread{
     public recognizingBackground(Context context, Handler resultHandler, boolean continuousLogging) {
         super("Sensor Thread");
 
+
         continuousLog = continuousLogging;
         uiHandler = resultHandler;
         startTime = System.currentTimeMillis();
@@ -144,7 +145,7 @@ public class recognizingBackground extends Thread{
             if (Thread.currentThread().isInterrupted()) {
                 Log.d(TAG, "interrupt");
                 return;
-            }
+            }Log.d(TAG,"CONTINOUS LOGGING: "+continuousLog);
             //Log.d(TAG, String.valueOf(System.currentTimeMillis()));
 
             // The sensor thread work
@@ -361,84 +362,66 @@ public class recognizingBackground extends Thread{
             diffZ.append(rotationZ.get(i));
             oldestIdx = i;
             if(!continuousLog) {
-                // in relaxing app, no need to check half gesture
                 if (rotationX.size() - i <= gestureHalfWindow) {
                     // check half gesture
                     if (accumulateX > halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Flip/ Adduction/ semi
                         recogGestureResult = 13;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Flip Half");
                     } else if (accumulateX < -halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Flip/ Abduction/ semi
                         recogGestureResult = 11;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Flip Half");
                     } else if (accumulateY > halfThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Rotate/ Adduction/ semi
                         recogGestureResult = 9;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Rotate Half");
                     } else if (accumulateY < -halfThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                         // Rotate/ Abduction/ semi
                         recogGestureResult = 7;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Rotate Half");
                     } else if (accumulateZ > halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                         // Rotate/ Adduction/ semi
                         recogGestureResult = 5;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Spin Half");
                     } else if (accumulateZ < -halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                         // Rotate/ Abduction/ semi
                         recogGestureResult = 3;
-                        MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue("Spin Half");
                     }
                 }
             }
+
             // check full gesture
             if (accumulateX > fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Adduction/ Full
                 recogGestureResult = 14;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
 //                Log.d(TAG,"Flip/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateX < -fullFlipThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Flip/ Abduction/ Full
                 recogGestureResult = 12;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
 
 //                Log.d(TAG,"Flip/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 0;
             } else if (accumulateY > fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Adduction/ Full
                 recogGestureResult = 10;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
 //                Log.d(TAG,"Rotate/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateY < -fullRotateThreshold && Math.abs(accumulateX) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
                 // Rotate/ Abduction/ Full
                 recogGestureResult = 8;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
 //                Log.d(TAG,"Rotate/ Abduction/ Full: "+recogGestureResult);
                 main_axis = 1;
             } else if (accumulateZ > fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Adduction/ Full
                 recogGestureResult = 6;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
 //                Log.d(TAG,"Spin/ Adduction/ Full: "+recogGestureResult);
                 main_axis = 2;
             } else if (accumulateZ < -fullSpinThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateX) < noneThreshold) {
                 // Spin/ Abduction/ Full
                 recogGestureResult = 4;
-                if(!MainActivity.userStudyModel.userId.isEmpty()){
-                    MainActivity.myRef.child(String.valueOf(System.currentTimeMillis())).setValue(MainActivity.userStudyModel);
-                }
+
                 main_axis = 2;
             }
 

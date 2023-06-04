@@ -13,26 +13,26 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="User" />
-    <EditText
-        android:id="@+id/contextId"
-        android:inputType="text"
+
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Context"/>
+    <RadioGroup
+        android:id="@+id/radioGroupContext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="Context"/>
-    <EditText
-        android:id="@+id/gesture"
-        android:inputType="text"
+        android:orientation="vertical"/>
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gesture"/>
+    <RadioGroup
+        android:id="@+id/radioGroupGesture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="Gesture"/>
+        android:orientation="vertical"/>
+
 </LinearLayout>

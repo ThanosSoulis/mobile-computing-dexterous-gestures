@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +39,20 @@ public class MyAlertDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog, null, false);
+        Set<String> uniqueOptions = new HashSet<>();
+
+        for (String value : MainActivity.gestureToCodeMap.values()) {
+            if (!value.contains("Full")) {
+                uniqueOptions.add(value);
+            }
+        }
+
+
+
 
         EditText inputUser = view.findViewById(R.id.userId);
         RadioGroup radioGroupGesture = view.findViewById(R.id.radioGroupGesture);
         RadioGroup radioGroupContext = view.findViewById(R.id.radioGroupContext);
-        Set<String> uniqueOptions = new HashSet<>(MainActivity.gestureToCodeMap.values());
 
         for (String option : uniqueOptions) {
             RadioButton radioButton = new RadioButton(view.getContext());
@@ -50,7 +60,7 @@ public class MyAlertDialogFragment extends DialogFragment {
             radioGroupGesture.addView(radioButton);
         }
 
-        List<String> stringList = Arrays.asList("Sit", "Walk", "Distracted (Typing)");
+        List<String> stringList = Arrays.asList("Sit", "Distracted (Reading out loud)", "Distracted (Typing)");
 
         for (String option : stringList) {
             RadioButton radioButton = new RadioButton(view.getContext());

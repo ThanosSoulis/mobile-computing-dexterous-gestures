@@ -361,7 +361,7 @@ public class recognizingBackground extends Thread{
             diffY.append(rotationY.get(i));
             diffZ.append(rotationZ.get(i));
             oldestIdx = i;
-            if(!continuousLog) {
+            if(continuousLog) {
                 if (rotationX.size() - i <= gestureHalfWindow) {
                     // check half gesture
                     if (accumulateX > halfThreshold && Math.abs(accumulateY) < noneThreshold && Math.abs(accumulateZ) < noneThreshold) {
